@@ -4,9 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/bloc/auth/auth_event.dart';
 import 'package:jmorder_app/bloc/auth/auth_state.dart';
+import 'package:jmorder_app/services/kakao_service.dart';
+import 'package:kakao_flutter_sdk/auth.dart';
+import 'package:logger/logger.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService _authService = GetIt.I.get<AuthService>();
+  final KakaoService _kakaoService = GetIt.I.get<KakaoService>();
+  final Logger _logger = Logger();
 
   AuthBloc(AuthState initialState) : super(initialState);
 
@@ -15,6 +20,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       if (event is AppLoaded) {
         yield AuthRequestState();
+        AccessToken accessToken = await _kakaoService.getToken();
+        _logger.d(accessToken);
         await _authService.refreshToken();
         yield LoginSuccessState(auth: _authService.auth);
       } else if (event is LoginSubmitted) {

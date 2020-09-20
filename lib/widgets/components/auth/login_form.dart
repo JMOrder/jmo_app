@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/bloc/auth/auth_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_event.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_bloc.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_event.dart';
+import 'package:jmorder_app/services/kakao_service.dart';
 import 'package:jmorder_app/widgets/pages/sign_up_page.dart';
 
 class LoginForm extends StatefulWidget {
@@ -125,19 +127,12 @@ class _LoginFormState extends State<LoginForm> {
           ),
           Container(
             height: 50.0,
-            child: RaisedButton(
-              onPressed: () => _submitLoginForm(context),
+            child: FlatButton(
+              onPressed: () => GetIt.I.get<KakaoService>().loginButtonClicked(),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "로그인",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              child: Image.asset("assets/images/kakao_login_medium_wide.png"),
             ),
           ),
           SizedBox(
