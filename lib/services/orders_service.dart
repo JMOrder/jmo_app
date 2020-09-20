@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/order.dart';
 import 'package:jmorder_app/services/api_service.dart';
+import 'package:jmorder_app/services/auth_service.dart';
 
 import 'exceptions/common_http_exception.dart';
 
@@ -24,12 +23,33 @@ class OrdersService {
     }
   }
 
-  Future<List<Order>> createOrder(Order order) async {
+  Future<Order> fetchOrderById(int id) async {
+    try {
+      var response = await _apiService.getClient().get("/orders/$id");
+      return Order.fromJson(response.data);
+    } on DioError {
+      throw new UnexpectedOrdersException();
+    }
+  }
+
+  Future<Order> createOrder(Order order) async {
+    try {
+      var response = await _apiService.getClient().post('/orders', data: {
+        "user": GetIt.I.get<AuthService>().profile.id,
+        "client": order.client.id,
+      });
+      this.orders.insert(0, Order.fromJson(response.data));
+      return Order.fromJson(response.data);
+    } on DioError {
+      throw UnexpectedOrdersException();
+    }
+  }
+
+  Future<Order> updateOrder(Order order) async {
     try {
       var response =
-          await _apiService.getClient().post('/orders', data: order.toJson());
-      this.orders.insert(0, Order.fromJson(response.data));
-      return this.orders;
+          await _apiService.getClient().put("/orders/${order.id}", data: order);
+      return Order.fromJson(response.data);
     } on DioError {
       throw UnexpectedOrdersException();
     }

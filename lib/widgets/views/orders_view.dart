@@ -8,6 +8,8 @@ import 'package:jmorder_app/bloc/orders/orders_event.dart';
 import 'package:jmorder_app/bloc/orders/orders_state.dart';
 import 'package:jmorder_app/models/order.dart';
 import 'package:jmorder_app/services/orders_service.dart';
+import 'package:jmorder_app/utils/router.dart';
+import 'package:jmorder_app/widgets/pages/order/order_detail_page.dart';
 
 class OrdersView extends StatelessWidget {
   static const int viewIndex = 2;
@@ -20,7 +22,13 @@ class OrdersView extends StatelessWidget {
           BlocBuilder<OrdersBloc, OrdersState>(
             builder: (context, state) {
               if (state is OrdersLoadedState) {
-                return ListView.builder(
+                return ListView.separated(
+                  separatorBuilder: (context, index) => Divider(
+                    height: 0,
+                    indent: 10,
+                    endIndent: 10,
+                    color: Colors.grey,
+                  ),
                   itemCount: state.orders.length,
                   itemBuilder: (context, index) {
                     Order order = state.orders[index];
@@ -63,6 +71,7 @@ class OrdersView extends StatelessWidget {
                                   onPressed: () {
                                     // Dismiss the dialog and
                                     // also dismiss the swiped item
+                                    state.orders.remove(order);
                                     Navigator.of(context).pop(true);
                                   },
                                 ),
@@ -79,9 +88,24 @@ class OrdersView extends StatelessWidget {
                           ) ??
                           false,
                       child: ListTile(
-                        onTap: () {
-                          print("Pressed: ${order.createdAt}");
+                        onTap: () async {
+                          Order fetchedOrder = await GetIt.I
+                              .get<OrdersService>()
+                              .fetchOrderById(order.id);
+                          return Navigator.of(context)
+                              .pushNamed(OrderDetailPage.routeName,
+                                  arguments: OrderDetailPageArgument(
+                                    order: fetchedOrder,
+                                    isNew: false,
+                                  ));
                         },
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          ),
+                        ),
                         title: Text(DateFormat.yMMMMd()
                             .add_jm()
                             .format(order.createdAt)),

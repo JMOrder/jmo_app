@@ -1,15 +1,13 @@
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_event.dart';
-import 'package:jmorder_app/bloc/orders/orders_bloc.dart';
-import 'package:jmorder_app/bloc/orders/orders_state.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_bloc.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_state.dart';
-import 'package:jmorder_app/widgets/components/client/basic_info_form_dialog.dart';
+import 'package:jmorder_app/widgets/components/client/client_basic_info_form_dialog.dart';
+import 'package:jmorder_app/widgets/components/order/order_search_client.dart';
 import 'package:jmorder_app/widgets/components/main/main_page_bottom_navigation_bar.dart';
-import 'package:jmorder_app/widgets/pages/order/add_order_page.dart';
 import 'package:jmorder_app/widgets/views/staffs_view.dart';
 import 'package:jmorder_app/widgets/views/chat_view.dart';
 import 'package:jmorder_app/widgets/views/orders_view.dart';
@@ -42,8 +40,12 @@ class MainPage extends StatelessWidget {
           appBarActions = [
             IconButton(
               icon: Icon(Icons.add),
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(AddOrderPage.routeName),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: OrderSearchClient(),
+                ).then((item) {});
+              },
             ),
           ];
         }
@@ -54,7 +56,7 @@ class MainPage extends StatelessWidget {
               icon: Icon(Icons.add),
               onPressed: () => showDialog(
                 context: context,
-                builder: (context) => BasicInfoFormDialog(),
+                builder: (context) => ClientBasicInfoFormDialog(),
               ),
             ),
           ];
@@ -66,6 +68,7 @@ class MainPage extends StatelessWidget {
       },
       builder: (context, navState) => Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             appBarTitle,
             textAlign: TextAlign.center,
@@ -81,11 +84,7 @@ class MainPage extends StatelessWidget {
               }
               if (navState is ChatViewState) return ChatView();
               if (navState is StaffsViewState) return StaffsView();
-              if (navState is OrdersViewState)
-                return BlocProvider<OrdersBloc>(
-                  create: (context) => OrdersBloc(OrdersLoadingState()),
-                  child: OrdersView(),
-                );
+              if (navState is OrdersViewState) return OrdersView();
               if (navState is ClientsViewState) return ClientsView();
               if (navState is SettingsViewState) return SettingsView();
               return Container();

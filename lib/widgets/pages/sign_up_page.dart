@@ -9,6 +9,7 @@ class SignUpPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF0844),
+        centerTitle: true,
         title: Text(
           FlutterI18n.translate(
             context,

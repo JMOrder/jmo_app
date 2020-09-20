@@ -8,10 +8,12 @@ import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_state.dart';
 import 'package:jmorder_app/bloc/clients/clients_bloc.dart';
 import 'package:jmorder_app/bloc/clients/clients_state.dart';
+import 'package:jmorder_app/bloc/orders/orders_bloc.dart';
 import 'package:jmorder_app/utils/router.dart';
 import 'package:jmorder_app/widgets/pages/auth_page.dart';
 
 import 'bloc/auth/auth_bloc.dart';
+import 'bloc/orders/orders_state.dart';
 
 class App extends StatefulWidget {
   @override
@@ -36,7 +38,10 @@ class AppState extends State<App> {
               ),
               BlocProvider<ClientsBloc>(
                 create: (context) => ClientsBloc(ClientsLoadingState()),
-              )
+              ),
+              BlocProvider<OrdersBloc>(
+                create: (context) => OrdersBloc(OrdersLoadingState()),
+              ),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

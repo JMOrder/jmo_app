@@ -4,7 +4,7 @@ import 'package:jmorder_app/bloc/clients/clients_bloc.dart';
 import 'package:jmorder_app/bloc/clients/clients_event.dart';
 import 'package:jmorder_app/models/client.dart';
 
-class BasicInfoFormDialog extends StatelessWidget {
+class ClientBasicInfoFormDialog extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();

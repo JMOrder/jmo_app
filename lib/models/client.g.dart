@@ -39,6 +39,6 @@ Map<String, dynamic> _$ClientToJson(Client instance) {
   writeNotNull('phone', instance.phone);
   writeNotNull('createdAt', instance.createdAt?.toIso8601String());
   writeNotNull('updatedAt', instance.updatedAt?.toIso8601String());
-  writeNotNull('items', instance.items);
+  writeNotNull('items', instance.items?.map((e) => e?.toJson())?.toList());
   return val;
 }

@@ -11,10 +11,7 @@ Auth _$AuthFromJson(Map<String, dynamic> json) {
     token: json['token'] as String,
     type: json['type'] as String,
     email: json['email'] as String,
-    id: json['id'] as int,
-    user: json['user'] == null
-        ? null
-        : User.fromJson(json['user'] as Map<String, dynamic>),
+    id: json['id'] as String,
   );
 }
 
@@ -23,5 +20,4 @@ Map<String, dynamic> _$AuthToJson(Auth instance) => <String, dynamic>{
       'type': instance.type,
       'email': instance.email,
       'id': instance.id,
-      'user': instance.user,
     };

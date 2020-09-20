@@ -3,13 +3,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_event.dart';
 
-class SignUpForm extends StatelessWidget {
+class SignUpForm extends StatefulWidget {
+  @override
+  _SignUpFormState createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
   final _emailController = TextEditingController();
+
   final _phoneController = TextEditingController();
+
   final _passwordController = TextEditingController();
+
   final _confirmPasswordController = TextEditingController();
+
   final _firstNameController = TextEditingController();
+
   final _lastNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

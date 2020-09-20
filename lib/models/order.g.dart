@@ -21,13 +21,30 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
     updatedAt: json['updatedAt'] == null
         ? null
         : DateTime.parse(json['updatedAt'] as String),
+    orderItems: (json['orderItems'] as List)
+            ?.map((e) => e == null
+                ? null
+                : OrderItem.fromJson(e as Map<String, dynamic>))
+            ?.toList() ??
+        [],
   );
 }
 
-Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
-      'id': instance.id,
-      'user': instance.user?.toJson(),
-      'client': instance.client?.toJson(),
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$OrderToJson(Order instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('user', instance.user?.toJson());
+  writeNotNull('client', instance.client?.toJson());
+  writeNotNull('createdAt', instance.createdAt?.toIso8601String());
+  writeNotNull('updatedAt', instance.updatedAt?.toIso8601String());
+  writeNotNull(
+      'orderItems', instance.orderItems?.map((e) => e?.toJson())?.toList());
+  return val;
+}

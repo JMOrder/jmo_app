@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jmorder_app/models/client.dart';
+import 'package:jmorder_app/models/order.dart';
 import 'package:jmorder_app/widgets/pages/auth_page.dart';
 import 'package:jmorder_app/widgets/pages/client/client_detail_page.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
-import 'package:jmorder_app/widgets/pages/order/add_order_page.dart';
+import 'package:jmorder_app/widgets/pages/order/order_detail_page.dart';
 import 'package:jmorder_app/widgets/pages/sign_up_page.dart';
 
 class Router {
@@ -19,8 +20,13 @@ class Router {
         return MaterialPageRoute(builder: (_) => AuthPage());
       case SignUpPage.routeName:
         return MaterialPageRoute(builder: (_) => SignUpPage());
-      case AddOrderPage.routeName:
-        return MaterialPageRoute(builder: (_) => AddOrderPage());
+      case OrderDetailPage.routeName:
+        OrderDetailPageArgument args = settings.arguments;
+        return MaterialPageRoute(
+            builder: (_) => OrderDetailPage(
+                  order: args.order,
+                  isNew: args.isNew,
+                ));
       case ClientDetailPage.routeName:
         var client = settings.arguments as Client;
         return MaterialPageRoute(
@@ -33,4 +39,11 @@ class Router {
                 ));
     }
   }
+}
+
+class OrderDetailPageArgument {
+  final Order order;
+  final bool isNew;
+
+  OrderDetailPageArgument({this.order, this.isNew});
 }

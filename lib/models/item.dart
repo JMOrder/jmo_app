@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'item.g.dart';
 
-@JsonSerializable(includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Item {
   int id;
   String name;
@@ -20,4 +20,9 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
   Map<String, dynamic> toJson() => _$ItemToJson(this);
+
+  bool operator ==(o) => o is Item && this.id == o.id;
+
+  @override
+  int get hashCode => super.hashCode;
 }

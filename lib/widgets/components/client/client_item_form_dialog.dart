@@ -5,7 +5,7 @@ import 'package:jmorder_app/models/item.dart';
 import 'package:jmorder_app/services/clients_service.dart';
 import 'package:meta/meta.dart';
 
-class ItemFormDialog extends StatelessWidget {
+class ClientItemFormDialog extends StatelessWidget {
   final Client client;
   final Item item;
   final Function(Client) afterSubmit;
@@ -13,7 +13,7 @@ class ItemFormDialog extends StatelessWidget {
   final TextEditingController _unitNameController = TextEditingController();
   final TextEditingController _quantityNameController = TextEditingController();
 
-  ItemFormDialog({
+  ClientItemFormDialog({
     Key key,
     @required this.client,
     this.item,
@@ -111,6 +111,17 @@ class ItemFormDialog extends StatelessWidget {
                   hintText: "수량 (예: 개, 묶음, 박스)",
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.all(0),
+                onChanged: (bool value) {
+                  return !value;
+                },
+                value: true,
+                title: Text("즐겨찾기"),
+              )
             ],
           ),
         ],

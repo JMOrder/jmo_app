@@ -25,7 +25,7 @@ class ClientsService {
     }
   }
 
-  Future<Client> fetchClientById(id) async {
+  Future<Client> fetchClientById(int id) async {
     try {
       var response = await _apiService.getClient().get("/clients/$id");
       return Client.fromJson(response.data);

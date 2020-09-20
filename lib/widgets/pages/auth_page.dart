@@ -133,7 +133,7 @@ class AuthPage extends StatelessWidget {
                               alignment: Alignment.topCenter,
                               child: Container(
                                 child: Text(
-                                  "주먹 맛 볼래",
+                                  "",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 40,

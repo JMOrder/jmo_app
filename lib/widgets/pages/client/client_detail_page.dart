@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/client.dart';
 import 'package:jmorder_app/models/item.dart';
 import 'package:jmorder_app/services/clients_service.dart';
-import 'package:jmorder_app/widgets/components/client/item_form_dialog.dart';
+import 'package:jmorder_app/widgets/components/client/client_item_form_dialog.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/views/clients_view.dart';
 
@@ -26,6 +26,7 @@ class _ClientDetailPageState extends State<ClientDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(_client.name),
           actions: [
             IconButton(
@@ -111,13 +112,10 @@ class _ClientDetailPageState extends State<ClientDetailPage> {
                               color: Colors.grey,
                               onPressed: () => showDialog(
                                 context: context,
-                                builder: (context) => ItemFormDialog(
+                                builder: (context) => ClientItemFormDialog(
                                   client: _client,
-                                  afterSubmit: (client) {
-                                    setState(() {
-                                      _client = client;
-                                    });
-                                  },
+                                  afterSubmit: (client) =>
+                                      setState(() => _client = client),
                                 ),
                               ),
                             ),
@@ -196,7 +194,7 @@ class _ClientDetailPageState extends State<ClientDetailPage> {
                                 onTap: () {
                                   showDialog(
                                     context: context,
-                                    builder: (context) => ItemFormDialog(
+                                    builder: (context) => ClientItemFormDialog(
                                       client: _client,
                                       item: item,
                                       afterSubmit: (client) {

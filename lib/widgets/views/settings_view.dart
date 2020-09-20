@@ -25,7 +25,7 @@ class SettingsView extends StatelessWidget {
             child: ListTile(
               onTap: () => {},
               title: Text(
-                GetIt.I.get<AuthService>().auth?.user?.fullName ?? "",
+                GetIt.I.get<AuthService>().profile?.fullName ?? "",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,

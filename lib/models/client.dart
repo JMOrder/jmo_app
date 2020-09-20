@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'client.g.dart';
 
-@JsonSerializable(includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Client {
   int id;
   String name;

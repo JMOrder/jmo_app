@@ -7,5 +7,6 @@ void main() {
   ServiceLocator.setupLocator();
 
   Intl.defaultLocale = "ko_KR";
+
   runApp(App());
 }
