@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jmorder_app/models/auth.dart';
 import 'package:jmorder_app/models/client.dart';
 import 'package:jmorder_app/models/order.dart';
 import 'package:jmorder_app/widgets/pages/auth_page.dart';
 import 'package:jmorder_app/widgets/pages/client/client_detail_page.dart';
+import 'package:jmorder_app/widgets/pages/integration_page.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/pages/order/order_detail_page.dart';
 import 'package:jmorder_app/widgets/pages/sign_up_page.dart';
@@ -20,6 +22,9 @@ class Router {
         return MaterialPageRoute(builder: (_) => AuthPage());
       case SignUpPage.routeName:
         return MaterialPageRoute(builder: (_) => SignUpPage());
+      case IntegrationPage.routeName:
+        var auth = settings.arguments as Auth;
+        return MaterialPageRoute(builder: (_) => IntegrationPage(auth: auth));
       case OrderDetailPage.routeName:
         OrderDetailPageArgument args = settings.arguments;
         return MaterialPageRoute(

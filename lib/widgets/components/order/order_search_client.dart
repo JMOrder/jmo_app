@@ -7,7 +7,7 @@ import 'package:jmorder_app/bloc/orders/orders_bloc.dart';
 import 'package:jmorder_app/bloc/orders/orders_event.dart';
 import 'package:jmorder_app/models/client.dart';
 import 'package:jmorder_app/models/order.dart';
-import 'package:jmorder_app/services/api_service.dart';
+import 'package:jmorder_app/services/jmo_api_service.dart';
 import 'package:jmorder_app/services/auth_service.dart';
 import 'package:jmorder_app/services/orders_service.dart';
 import 'package:jmorder_app/utils/router.dart';
@@ -18,7 +18,7 @@ class OrderSearchClient extends SearchDelegate {
 
   Future<List<Client>> searchClients(String query) async {
     var response =
-        await GetIt.I.get<ApiService>().getClient().get("/clients/search");
+        await GetIt.I.get<JmoApiService>().getClient().get("/clients/search");
     return List<Map>.from(response.data)
         .map((Map model) => Client.fromJson(model))
         .toList();
@@ -38,7 +38,7 @@ class OrderSearchClient extends SearchDelegate {
     // debounceActive = false;
     // return items;
     // hit your api here
-    var response = await GetIt.I.get<ApiService>().getClient().get(
+    var response = await GetIt.I.get<JmoApiService>().getClient().get(
       "/clients/search",
       queryParameters: {"q": query},
     );

@@ -3,12 +3,12 @@ import 'package:jmorder_app/models/item.dart';
 import 'package:meta/meta.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/client.dart';
-import 'package:jmorder_app/services/api_service.dart';
+import 'package:jmorder_app/services/jmo_api_service.dart';
 
 import 'exceptions/common_http_exception.dart';
 
 class ClientsService {
-  ApiService get _apiService => GetIt.I.get<ApiService>();
+  JmoApiService get _apiService => GetIt.I.get<JmoApiService>();
   List<Client> _clients = [];
 
   List<Client> get clients => List.unmodifiable(_clients);

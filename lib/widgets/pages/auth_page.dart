@@ -1,19 +1,28 @@
+import 'package:get_it/get_it.dart';
+import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_bloc.dart';
+import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_event.dart';
+import 'package:jmorder_app/services/auth_service.dart';
 import 'package:jmorder_app/utils/global_exception_ui_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_event.dart';
 import 'package:jmorder_app/bloc/auth/auth_state.dart';
-import 'package:jmorder_app/widgets/components/auth/login_form.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:jmorder_app/widgets/pages/integration_page.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/views/staffs_view.dart';
 
 class AuthPage extends StatelessWidget {
   static const String routeName = '/login';
+
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<AuthBloc>(context).add(AppLoaded());
+    if (GetIt.I.get<AuthService>().isAuthenticated) {
+      BlocProvider.of<BottomNavigationBloc>(context).add(PageTapped(index: 0));
+    }
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: LayoutBuilder(
@@ -22,17 +31,21 @@ class AuthPage extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: constraints.maxHeight,
+                minWidth: constraints.maxWidth,
               ),
               child: BlocListener<AuthBloc, AuthState>(
                 listener: (context, state) {
+                  if (state is IntegrationRequiredState) {
+                    Navigator.pushNamed(context, IntegrationPage.routeName,
+                        arguments: state.auth);
+                  }
                   if (state is LoginSuccessState) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       MainPage.routeName,
                       (r) => false,
                       arguments: StaffsView.viewIndex,
                     );
-                  }
-                  if (state is LoginFailureState) {
+                  } else if (state is LoginFailureState) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -54,8 +67,7 @@ class AuthPage extends StatelessWidget {
                         );
                       },
                     );
-                  }
-                  if (state is SignUpSuccessState) {
+                  } else if (state is SignUpSuccessState) {
                     Navigator.of(context).pop();
                     showDialog(
                       context: context,
@@ -84,8 +96,7 @@ class AuthPage extends StatelessWidget {
                         );
                       },
                     );
-                  }
-                  if (state is SignUpFailureState) {
+                  } else if (state is SignUpFailureState) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -103,8 +114,7 @@ class AuthPage extends StatelessWidget {
                         );
                       },
                     );
-                  }
-                  if (state is UnexpectedFailureState) {
+                  } else if (state is UnexpectedFailureState) {
                     GlobalExceptionUIHandler.showUnexpectedErrorDialog(context);
                   }
                 },
@@ -118,37 +128,59 @@ class AuthPage extends StatelessWidget {
                   ),
                   child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
-                      if (state is AuthInitialState ||
-                          state is AuthRequestState) {
+                      if (state is AuthRequestState) {
                         return Center(child: CircularProgressIndicator());
                       }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(100.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Container(
-                                child: Text(
-                                  "",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 35.0, vertical: 100.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            FlatButton(
+                              onPressed: () =>
+                                  BlocProvider.of<AuthBloc>(context)
+                                      .add(KakaoLoginSubmitted()),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
+                              child: Image.asset(
+                                  "assets/images/kakao_login_wide.png"),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 40.0, horizontal: 20.0),
-                            child: LoginForm(),
-                          )
-                        ],
+                            FlatButton(
+                              onPressed: () => {
+                                // TODO: NAVER OAUTH SHOULD BE IMPLEMENTED
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Image.asset(
+                                  "assets/images/naver_login_wide.png"),
+                            ),
+                            // Container(
+                            //   height: 40.0,
+                            //   margin: EdgeInsets.symmetric(horizontal: 35),
+                            //   child: RaisedButton(
+                            //     onPressed: () => showBottom(context),
+                            //     color: Theme.of(context).primaryColor,
+                            //     shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(5.0),
+                            //     ),
+                            //     child: Container(
+                            //       alignment: Alignment.center,
+                            //       child: Text(
+                            //         "이메일 로그인",
+                            //         textAlign: TextAlign.center,
+                            //         style: TextStyle(color: Colors.white),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            // SizedBox(height: 20),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -160,4 +192,24 @@ class AuthPage extends StatelessWidget {
       ),
     );
   }
+
+  // showBottom(BuildContext context) {
+  //   return showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     builder: (BuildContext context) {
+  //       return Padding(
+  //         padding: MediaQuery.of(context).viewInsets,
+  //         child: Container(
+  //           color: Colors.white,
+  //           height: 280,
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(8.0),
+  //             child: LoginForm(),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
