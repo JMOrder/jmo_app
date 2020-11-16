@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/order.dart';
-import 'package:jmorder_app/services/api_service.dart';
+import 'package:jmorder_app/services/jmo_api_service.dart';
 import 'package:jmorder_app/services/auth_service.dart';
 
 import 'exceptions/common_http_exception.dart';
 
 class OrdersService {
-  ApiService get _apiService => GetIt.I.get<ApiService>();
+  JmoApiService get _apiService => GetIt.I.get<JmoApiService>();
   List<Order> orders = [];
 
   Future<List<Order>> fetchOrders() async {

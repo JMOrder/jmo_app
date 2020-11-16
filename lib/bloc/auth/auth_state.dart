@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-
 import 'package:jmorder_app/models/auth.dart';
+import 'package:jmorder_app/models/profile.dart';
 import 'package:jmorder_app/services/exceptions/auth_service_exception.dart';
 import 'package:meta/meta.dart';
 
@@ -21,8 +21,9 @@ class LoginWaitingState extends AuthState {}
 
 class LoginSuccessState extends AuthState {
   final Auth auth;
+  final Profile profile;
 
-  LoginSuccessState({@required this.auth});
+  LoginSuccessState({@required this.auth, @required this.profile});
 
   @override
   List<Object> get props => [auth];
@@ -57,6 +58,14 @@ class SignUpFailureState extends AuthState {
 
   @override
   List<Object> get props => [error];
+}
+
+class IntegrationRequiredState extends AuthState {
+  final Auth auth;
+  IntegrationRequiredState({@required this.auth});
+
+  @override
+  List<Object> get props => [auth];
 }
 
 class UnexpectedFailureState extends AuthState {

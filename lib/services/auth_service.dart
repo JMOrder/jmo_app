@@ -1,46 +1,68 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/auth.dart';
 import 'package:jmorder_app/models/profile.dart';
 import 'package:jmorder_app/services/exceptions/auth_service_exception.dart';
-import 'package:get_it/get_it.dart';
-import 'package:meta/meta.dart';
+import 'package:kakao_flutter_sdk/auth.dart';
 
-import 'api_service.dart';
+import 'jmo_api_service.dart';
 
 class AuthService {
-  Auth _auth;
-  Profile _profile;
+  Profile profile;
+  bool _isKakaoInstalled = false;
+  String _authorizationHeader = "";
 
-  AuthService()
-      : this._auth = Auth(),
-        this._profile = Profile();
+  JmoApiService get apiService => GetIt.I.get<JmoApiService>();
+  String get authorizationHeader => _authorizationHeader;
 
-  Auth get auth => _auth;
-  Profile get profile => _profile;
-  String get authorizationHeader => "${_auth?.type} ${_auth?.token}";
+  bool get isAuthenticated => authorizationHeader != "";
 
-  bool hasAuth() {
-    return _auth != null;
+  Future init() async {
+    KakaoContext.clientId = DotEnv().env['KAKAO_CLIENT_ID'];
+    this._isKakaoInstalled = await isKakaoTalkInstalled();
   }
 
-  ApiService get _apiService => GetIt.I.get<ApiService>();
-
-  Future<void> login(email, password) async {
+  Future<Auth> loginWithKakao() async {
+    String authCode;
     try {
-      var response = await _apiService.getClient().post('/auth', data: {
+      authCode = this._isKakaoInstalled
+          ? await AuthCodeClient.instance.requestWithTalk()
+          : await AuthCodeClient.instance.request();
+    } catch (e) {
+      return null;
+    }
+
+    var response = await apiService.getClient().post("/auth/kakao", data: {
+      "code": authCode,
+      "redirectUri": "kakao${DotEnv().env['KAKAO_CLIENT_ID']}://oauth"
+    });
+    Auth auth = Auth.fromJson(response.data);
+    this._authorizationHeader = auth.authorization;
+    AccessTokenStore.instance.toStore(auth.accessTokenResponse);
+    if (response.statusCode == HttpStatus.ok) {
+      final storage = new FlutterSecureStorage();
+      await storage.write(key: "JMO_JWT_TOKEN", value: auth.token);
+    }
+    return auth;
+  }
+
+  Future<Auth> loginWithLocal(email, password) async {
+    try {
+      var response = await apiService.getClient().post('/auth', data: {
         "email": email,
         "password": password,
       });
 
-      _auth = Auth.fromJson(response.data);
+      Auth auth = Auth.fromJson(response.data);
+      this._authorizationHeader = auth.authorization;
       final storage = new FlutterSecureStorage();
-      storage.write(key: "jwt", value: _auth.token);
-      var profileResponse = await _apiService.getClient().get('/profile');
-      _profile = Profile.fromJson(profileResponse.data);
+      await storage.write(key: "JMO_JWT_TOKEN", value: auth.token);
+      return auth;
     } on DioError catch (e) {
       if (e.response?.statusCode == HttpStatus.unauthorized)
         throw LoginFailedException();
@@ -48,16 +70,15 @@ class AuthService {
     }
   }
 
-  Future<void> refreshToken() async {
+  Future<Auth> refreshToken() async {
     try {
+      var response = await apiService.getClient().post('/auth/refresh-token');
+      Auth auth = Auth.fromJson(response.data);
+      this._authorizationHeader = auth.authorization;
       final storage = new FlutterSecureStorage();
-      String jwt = await storage.read(key: "jwt");
-      _auth = Auth(token: jwt, type: "Bearer");
-      var response = await _apiService.getClient().post('/auth/refresh-token');
-      _auth = Auth.fromJson(response.data);
-      storage.write(key: "jwt", value: _auth.token);
-      var profileResponse = await _apiService.getClient().get('/profile');
-      _profile = Profile.fromJson(profileResponse.data);
+      await storage.write(key: "JMO_JWT_TOKEN", value: auth.token);
+      await this.fetchProfile();
+      return auth;
     } on DioError catch (e) {
       if (e.response?.statusCode == HttpStatus.unauthorized) {
         throw RefreshTokenFailedException();
@@ -70,9 +91,9 @@ class AuthService {
   Future<void> logout() async {
     try {
       final storage = new FlutterSecureStorage();
-      await storage.delete(key: "jwt");
-      await _apiService.getClient().delete('/auth');
-      _auth = null;
+      await storage.delete(key: "JMO_JWT_TOKEN");
+      await apiService.getClient().delete('/auth');
+      this._authorizationHeader = "";
     } catch (e) {
       throw LogoutFailedException();
     }
@@ -86,7 +107,7 @@ class AuthService {
     @required lastName,
   }) async {
     try {
-      await _apiService.getClient().post('/auth/register', data: {
+      await apiService.getClient().post('/auth/register', data: {
         "email": email,
         "phone": phone,
         "password": password,
@@ -97,6 +118,20 @@ class AuthService {
       if (e.response?.statusCode == HttpStatus.unprocessableEntity)
         throw SignUpFailedException();
       throw UnexpectedAuthException();
+    }
+  }
+
+  Future<AccessToken> getKakaoAccessToken() {
+    return AccessTokenStore.instance.fromStore();
+  }
+
+  Future<Profile> fetchProfile() async {
+    try {
+      var profileResponse = await this.apiService.getClient().get("/profile");
+      this.profile = Profile.fromJson(profileResponse.data);
+      return profile;
+    } catch (e) {
+      throw ProfileFetchFailedException();
     }
   }
 }

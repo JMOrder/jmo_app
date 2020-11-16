@@ -4,21 +4,20 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:jmorder_app/services/api_service/api_serivce_interceptor.dart';
+import 'package:jmorder_app/services/jmo_api_service/jmo_api_serivce_interceptor.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:jmorder_app/services/exceptions/unsupported_os_exception.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-class ApiService {
+class JmoApiService {
   final Dio _client = new Dio();
   CookieJar _cookieJar;
 
-  ApiService() {
+  JmoApiService() {
     if (Platform.isAndroid)
       _client.options.baseUrl = "http://10.0.1.10:8080";
     else if (Platform.isIOS)
       _client.options.baseUrl = "http://localhost:8080";
-    // _client.options.baseUrl = "http://192.168.123.108:8080/api";
     else
       throw UnsupportedOSException(Platform.operatingSystem);
 
@@ -30,7 +29,7 @@ class ApiService {
     };
   }
 
-  Future<ApiService> init() async {
+  Future init() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     _cookieJar = PersistCookieJar(
       dir: appDocDir.path + "/.cookies/",
@@ -42,18 +41,17 @@ class ApiService {
             _cookieJar,
           ),
           PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
+            requestHeader: false,
+            requestBody: false,
             responseBody: true,
             responseHeader: false,
             error: true,
             compact: true,
             maxWidth: 90,
           ),
-          ApiServiceInterceptor(client: _client),
+          JmoApiServiceInterceptor(client: _client),
         ],
       );
-    return this;
   }
 
   Dio getClient() {

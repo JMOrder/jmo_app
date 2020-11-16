@@ -1,12 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/bloc/auth/auth_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_event.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_bloc.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_event.dart';
-import 'package:jmorder_app/services/kakao_service.dart';
 import 'package:jmorder_app/widgets/pages/sign_up_page.dart';
 
 class LoginForm extends StatefulWidget {
@@ -61,8 +59,8 @@ class _LoginFormState extends State<LoginForm> {
           Container(
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 255, 255, 0.40),
-              borderRadius: BorderRadius.circular(10),
+              color: Color.fromRGBO(255, 255, 255, 0.20),
+              borderRadius: BorderRadius.circular(5),
             ),
             child: Column(
               children: <Widget>[
@@ -94,8 +92,8 @@ class _LoginFormState extends State<LoginForm> {
           Container(
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 255, 255, 0.40),
-              borderRadius: BorderRadius.circular(10),
+              color: Color.fromRGBO(255, 255, 255, 0.20),
+              borderRadius: BorderRadius.circular(5),
             ),
             child: Column(
               children: <Widget>[
@@ -126,25 +124,13 @@ class _LoginFormState extends State<LoginForm> {
             height: 10,
           ),
           Container(
-            height: 50.0,
-            child: FlatButton(
-              onPressed: () => GetIt.I.get<KakaoService>().loginButtonClicked(),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Image.asset("assets/images/kakao_login_medium_wide.png"),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 50.0,
+            height: 40.0,
+            margin: EdgeInsets.symmetric(horizontal: 20),
             child: RaisedButton(
               onPressed: () => _submitLoginForm(context),
               color: Theme.of(context).primaryColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: Container(
                 alignment: Alignment.center,
@@ -158,13 +144,14 @@ class _LoginFormState extends State<LoginForm> {
           ),
           SizedBox(height: 10),
           Container(
-            height: 50.0,
+            height: 40.0,
+            margin: EdgeInsets.symmetric(horizontal: 20),
             child: RaisedButton(
               color: Theme.of(context).primaryColor,
               onPressed: () =>
                   Navigator.of(context).pushNamed(SignUpPage.routeName),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: Container(
                 alignment: Alignment.center,

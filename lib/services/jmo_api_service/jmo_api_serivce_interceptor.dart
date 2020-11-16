@@ -3,15 +3,15 @@ import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 import 'package:jmorder_app/services/auth_service.dart';
 
-class ApiServiceInterceptor extends Interceptor {
+class JmoApiServiceInterceptor extends Interceptor {
   final Dio client;
-  final AuthService _authService = GetIt.I.get<AuthService>();
+  AuthService get _authService => GetIt.I.get<AuthService>();
 
-  ApiServiceInterceptor({@required this.client});
+  JmoApiServiceInterceptor({@required this.client});
 
   @override
   Future onRequest(RequestOptions options) async {
-    if (_authService.hasAuth()) {
+    if (_authService.isAuthenticated) {
       options.headers["Authorization"] = _authService.authorizationHeader;
     }
     return options;

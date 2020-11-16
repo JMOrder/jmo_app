@@ -6,6 +6,8 @@ class LoginFailedException extends AuthServiceException {}
 
 class LogoutFailedException extends AuthServiceException {}
 
+class ProfileFetchFailedException extends AuthServiceException {}
+
 class RefreshTokenFailedException extends AuthServiceException {}
 
 class SignUpFailedException extends AuthServiceException {}

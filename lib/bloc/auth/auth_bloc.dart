@@ -1,17 +1,17 @@
+import 'package:jmorder_app/models/auth.dart';
+import 'package:jmorder_app/models/profile.dart';
 import 'package:jmorder_app/services/auth_service.dart';
 import 'package:jmorder_app/services/exceptions/auth_service_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/bloc/auth/auth_event.dart';
 import 'package:jmorder_app/bloc/auth/auth_state.dart';
-import 'package:jmorder_app/services/kakao_service.dart';
-import 'package:kakao_flutter_sdk/auth.dart';
-import 'package:logger/logger.dart';
+import 'package:jmorder_app/services/integration_service.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService _authService = GetIt.I.get<AuthService>();
-  final KakaoService _kakaoService = GetIt.I.get<KakaoService>();
-  final Logger _logger = Logger();
+  final IntegrationService _integrationService =
+      GetIt.I.get<IntegrationService>();
 
   AuthBloc(AuthState initialState) : super(initialState);
 
@@ -20,17 +20,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       if (event is AppLoaded) {
         yield AuthRequestState();
-        AccessToken accessToken = await _kakaoService.getToken();
-        _logger.d(accessToken);
-        await _authService.refreshToken();
-        yield LoginSuccessState(auth: _authService.auth);
+        Auth auth = await _authService.refreshToken();
+        this.add(FetchProfile(auth: auth));
       } else if (event is LoginSubmitted) {
         yield AuthRequestState();
-        await _authService.login(
+        Auth auth = await _authService.loginWithLocal(
           event.email,
           event.password,
         );
-        yield LoginSuccessState(auth: _authService.auth);
+        this.add(FetchProfile(auth: auth));
+      } else if (event is KakaoLoginSubmitted) {
+        yield AuthRequestState();
+        Auth auth = await _authService.loginWithKakao();
+        if (auth == null) {
+          yield LoginWaitingState();
+        } else if (auth.connectedUser == null) {
+          yield IntegrationRequiredState(auth: auth);
+        } else {
+          this.add(FetchProfile(auth: auth));
+        }
+      } else if (event is FetchProfile) {
+        Profile profile = await _authService.fetchProfile();
+        yield LoginSuccessState(auth: event.auth, profile: profile);
       } else if (event is LogoutSubmitted) {
         yield AuthRequestState();
         await _authService.logout();
