@@ -8,9 +8,9 @@ import 'package:jmorder_app/services/orders_service.dart';
 class ServiceLocator {
   static void setupLocator() {
     GetIt.I.registerSingletonAsync<JmoApiService>(
-        () async => JmoApiService().init());
+        () async => JmoApiService()..init());
     GetIt.I
-        .registerSingletonAsync<AuthService>(() async => AuthService().init());
+        .registerSingletonAsync<AuthService>(() async => AuthService()..init());
     GetIt.I.registerSingleton<IntegrationService>(IntegrationService());
     GetIt.I.registerSingleton<ClientsService>(ClientsService());
     GetIt.I.registerSingleton<OrdersService>(OrdersService());

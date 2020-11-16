@@ -29,7 +29,7 @@ class JmoApiService {
     };
   }
 
-  Future<JmoApiService> init() async {
+  Future init() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     _cookieJar = PersistCookieJar(
       dir: appDocDir.path + "/.cookies/",
@@ -52,7 +52,6 @@ class JmoApiService {
           JmoApiServiceInterceptor(client: _client),
         ],
       );
-    return this;
   }
 
   Dio getClient() {

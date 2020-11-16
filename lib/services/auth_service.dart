@@ -22,10 +22,9 @@ class AuthService {
 
   bool get isAuthenticated => authorizationHeader != "";
 
-  Future<AuthService> init() async {
+  Future init() async {
     KakaoContext.clientId = DotEnv().env['KAKAO_CLIENT_ID'];
     this._isKakaoInstalled = await isKakaoTalkInstalled();
-    return this;
   }
 
   Future<Auth> loginWithKakao() async {
