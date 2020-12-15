@@ -15,12 +15,8 @@ import 'jmo_api_service.dart';
 class AuthService {
   Profile profile;
   bool _isKakaoInstalled = false;
-  String _authorizationHeader = "";
 
   JmoApiService get apiService => GetIt.I.get<JmoApiService>();
-  String get authorizationHeader => _authorizationHeader;
-
-  bool get isAuthenticated => authorizationHeader != "";
 
   Future init() async {
     KakaoContext.clientId = DotEnv().env['KAKAO_CLIENT_ID'];
@@ -42,8 +38,10 @@ class AuthService {
       "redirectUri": "kakao${DotEnv().env['KAKAO_CLIENT_ID']}://oauth"
     });
     Auth auth = Auth.fromJson(response.data);
-    this._authorizationHeader = auth.authorization;
-    AccessTokenStore.instance.toStore(auth.accessTokenResponse);
+    AccessTokenResponse accessTokenResponse =
+        AccessTokenResponse.fromJson(response.data["accessTokenResponse"]);
+    apiService.setAuthorizationHeader(auth);
+    AccessTokenStore.instance.toStore(accessTokenResponse);
     if (response.statusCode == HttpStatus.ok) {
       final storage = new FlutterSecureStorage();
       await storage.write(key: "JMO_JWT_TOKEN", value: auth.token);
@@ -59,7 +57,7 @@ class AuthService {
       });
 
       Auth auth = Auth.fromJson(response.data);
-      this._authorizationHeader = auth.authorization;
+      apiService.setAuthorizationHeader(auth);
       final storage = new FlutterSecureStorage();
       await storage.write(key: "JMO_JWT_TOKEN", value: auth.token);
       return auth;
@@ -74,7 +72,7 @@ class AuthService {
     try {
       var response = await apiService.getClient().post('/auth/refresh-token');
       Auth auth = Auth.fromJson(response.data);
-      this._authorizationHeader = auth.authorization;
+      apiService.setAuthorizationHeader(auth);
       final storage = new FlutterSecureStorage();
       await storage.write(key: "JMO_JWT_TOKEN", value: auth.token);
       await this.fetchProfile();
@@ -93,7 +91,7 @@ class AuthService {
       final storage = new FlutterSecureStorage();
       await storage.delete(key: "JMO_JWT_TOKEN");
       await apiService.getClient().delete('/auth');
-      this._authorizationHeader = "";
+      apiService.clearAuthorizationHeader();
     } catch (e) {
       throw LogoutFailedException();
     }

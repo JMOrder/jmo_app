@@ -14,11 +14,7 @@ Auth _$AuthFromJson(Map<String, dynamic> json) {
     ..connectedUser = json['connectedUser'] == null
         ? null
         : ConnectedUser.fromJson(json['connectedUser'] as Map<String, dynamic>)
-    ..authDetail = json['authDetail'] as String
-    ..accessTokenResponse = json['accessTokenResponse'] == null
-        ? null
-        : AccessTokenResponse.fromJson(
-            json['accessTokenResponse'] as Map<String, dynamic>);
+    ..authDetail = json['authDetail'] as String;
 }
 
 Map<String, dynamic> _$AuthToJson(Auth instance) => <String, dynamic>{
@@ -26,5 +22,4 @@ Map<String, dynamic> _$AuthToJson(Auth instance) => <String, dynamic>{
       'type': instance.type,
       'connectedUser': instance.connectedUser,
       'authDetail': instance.authDetail,
-      'accessTokenResponse': instance.accessTokenResponse,
     };

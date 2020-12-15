@@ -11,7 +11,7 @@ class ServiceLocator {
         () async => JmoApiService()..init());
     GetIt.I
         .registerSingletonAsync<AuthService>(() async => AuthService()..init());
-    GetIt.I.registerSingleton<IntegrationService>(IntegrationService());
+    GetIt.I.registerSingleton<VerificationService>(VerificationService());
     GetIt.I.registerSingleton<ClientsService>(ClientsService());
     GetIt.I.registerSingleton<OrdersService>(OrdersService());
   }

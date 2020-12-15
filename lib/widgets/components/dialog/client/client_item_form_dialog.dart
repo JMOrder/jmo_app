@@ -5,25 +5,41 @@ import 'package:jmorder_app/models/item.dart';
 import 'package:jmorder_app/services/clients_service.dart';
 import 'package:meta/meta.dart';
 
-class ClientItemFormDialog extends StatelessWidget {
+class ClientItemFormDialog extends StatefulWidget {
   final Client client;
   final Item item;
   final Function(Client) afterSubmit;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _unitNameController = TextEditingController();
-  final TextEditingController _quantityNameController = TextEditingController();
 
   ClientItemFormDialog({
     Key key,
     @required this.client,
     this.item,
     this.afterSubmit,
-  }) : super(key: key) {
-    if (this.item != null) {
-      this._nameController.text = item.name;
-      this._unitNameController.text = item.unitName;
-      this._quantityNameController.text = item.quantityName;
+  }) : super(key: key);
+
+  @override
+  _ClientItemFormDialogState createState() => _ClientItemFormDialogState();
+}
+
+class _ClientItemFormDialogState extends State<ClientItemFormDialog> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _unitNameController = TextEditingController();
+  final TextEditingController _quantityNameController = TextEditingController();
+
+  _ClientItemFormDialogState() {
+    if (widget.item != null) {
+      this._nameController.text = widget.item.name;
+      this._unitNameController.text = widget.item.unitName;
+      this._quantityNameController.text = widget.item.quantityName;
     }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _unitNameController.dispose();
+    _quantityNameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -32,13 +48,13 @@ class ClientItemFormDialog extends StatelessWidget {
       title: ListTile(
         contentPadding: EdgeInsets.all(0),
         title: Text(
-          item == null ? "새 품목" : "품목 관리",
+          widget.item == null ? "새 품목" : "품목 관리",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        trailing: item == null
+        trailing: widget.item == null
             ? null
             : IconButton(
                 icon: Icon(Icons.delete),
@@ -57,13 +73,12 @@ class ClientItemFormDialog extends StatelessWidget {
                             // Dismiss the dialog and
                             // also dismiss the swiped item
 
-                            await GetIt.I
-                                .get<ClientsService>()
-                                .deleteItem(client: client, item: item);
+                            await GetIt.I.get<ClientsService>().deleteItem(
+                                client: widget.client, item: widget.item);
                             Navigator.of(context).pop(true);
                             closeMainPopup();
-                            if (this.afterSubmit != null)
-                              this.afterSubmit(client);
+                            if (this.widget.afterSubmit != null)
+                              this.widget.afterSubmit(widget.client);
                           },
                         ),
                         FlatButton(
@@ -136,9 +151,9 @@ class ClientItemFormDialog extends StatelessWidget {
         new FlatButton(
           child: new Text('추가'),
           onPressed: () async {
-            if (this.item == null) {
+            if (this.widget.item == null) {
               await GetIt.I.get<ClientsService>().addItem(
-                    client: client,
+                    client: widget.client,
                     item: Item(
                       name: _nameController.text,
                       unitName: _unitNameController.text,
@@ -146,19 +161,20 @@ class ClientItemFormDialog extends StatelessWidget {
                     ),
                   );
             } else {
-              item.name = _nameController.text;
-              item.unitName = _unitNameController.text;
-              item.quantityName = _quantityNameController.text;
+              widget.item.name = _nameController.text;
+              widget.item.unitName = _unitNameController.text;
+              widget.item.quantityName = _quantityNameController.text;
               await GetIt.I.get<ClientsService>().editItem(
-                    client: client,
-                    item: item,
+                    client: widget.client,
+                    item: widget.item,
                   );
             }
             _nameController.clear();
             _unitNameController.clear();
             _quantityNameController.clear();
             Navigator.of(context).pop();
-            if (this.afterSubmit != null) this.afterSubmit(client);
+            if (this.widget.afterSubmit != null)
+              this.widget.afterSubmit(widget.client);
           },
         ),
       ],

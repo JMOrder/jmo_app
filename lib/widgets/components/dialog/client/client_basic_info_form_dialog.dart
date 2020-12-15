@@ -4,7 +4,13 @@ import 'package:jmorder_app/bloc/clients/clients_bloc.dart';
 import 'package:jmorder_app/bloc/clients/clients_event.dart';
 import 'package:jmorder_app/models/client.dart';
 
-class ClientBasicInfoFormDialog extends StatelessWidget {
+class ClientBasicInfoFormDialog extends StatefulWidget {
+  @override
+  _ClientBasicInfoFormDialogState createState() =>
+      _ClientBasicInfoFormDialogState();
+}
+
+class _ClientBasicInfoFormDialogState extends State<ClientBasicInfoFormDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -25,10 +31,19 @@ class ClientBasicInfoFormDialog extends StatelessWidget {
         phone: _phoneController.text,
       ),
     ));
-    _nameController.clear();
-    _phoneController.clear();
-    _addressController.clear();
+    this.dispose();
     Navigator.of(context).pop();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _nameFocus.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    super.dispose();
   }
 
   @override
