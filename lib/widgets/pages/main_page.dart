@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_state.dart';
-import 'package:jmorder_app/widgets/components/client/client_basic_info_form_dialog.dart';
+import 'package:jmorder_app/widgets/components/dialog/client/client_basic_info_form_dialog.dart';
 import 'package:jmorder_app/widgets/components/order/order_search_client.dart';
 import 'package:jmorder_app/widgets/components/main/main_page_bottom_navigation_bar.dart';
 import 'package:jmorder_app/widgets/views/staffs_view.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jmorder_app/models/connected_user.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kakao_flutter_sdk/auth.dart';
 
 part 'auth.g.dart';
 
@@ -11,7 +10,6 @@ class Auth {
   String type;
   ConnectedUser connectedUser;
   String authDetail;
-  AccessTokenResponse accessTokenResponse;
 
   Auth({
     @required this.token,

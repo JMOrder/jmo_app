@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/client.dart';
 import 'package:jmorder_app/models/item.dart';
 import 'package:jmorder_app/services/clients_service.dart';
-import 'package:jmorder_app/widgets/components/client/client_item_form_dialog.dart';
+import 'package:jmorder_app/widgets/components/dialog/client/client_item_form_dialog.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/views/clients_view.dart';
 

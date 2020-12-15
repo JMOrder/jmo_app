@@ -1,7 +1,5 @@
-import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_bloc.dart';
 import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_event.dart';
-import 'package:jmorder_app/services/auth_service.dart';
 import 'package:jmorder_app/utils/global_exception_ui_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +7,7 @@ import 'package:jmorder_app/bloc/auth/auth_bloc.dart';
 import 'package:jmorder_app/bloc/auth/auth_event.dart';
 import 'package:jmorder_app/bloc/auth/auth_state.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:jmorder_app/widgets/pages/integration_page.dart';
+import 'package:jmorder_app/widgets/pages/verification_page.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/views/staffs_view.dart';
 
@@ -19,12 +17,12 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<AuthBloc>(context).add(AppLoaded());
-    if (GetIt.I.get<AuthService>().isAuthenticated) {
-      BlocProvider.of<BottomNavigationBloc>(context).add(PageTapped(index: 0));
-    }
+    // if (GetIt.I.get<AuthService>().isAuthenticated) {
+    //   BlocProvider.of<BottomNavigationBloc>(context).add(PageTapped(index: 0));
+    // }
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -36,10 +34,12 @@ class AuthPage extends StatelessWidget {
               child: BlocListener<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is IntegrationRequiredState) {
-                    Navigator.pushNamed(context, IntegrationPage.routeName,
+                    Navigator.pushNamed(context, VerificationPage.routeName,
                         arguments: state.auth);
                   }
                   if (state is LoginSuccessState) {
+                    BlocProvider.of<BottomNavigationBloc>(context)
+                        .add(PageTapped(index: 0));
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       MainPage.routeName,
                       (r) => false,
@@ -118,72 +118,62 @@ class AuthPage extends StatelessWidget {
                     GlobalExceptionUIHandler.showUnexpectedErrorDialog(context);
                   }
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xFFFF0844), Color(0xFFFFB199)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: BlocBuilder<AuthBloc, AuthState>(
-                    builder: (context, state) {
-                      if (state is AuthRequestState) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 35.0, vertical: 100.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            FlatButton(
-                              onPressed: () =>
-                                  BlocProvider.of<AuthBloc>(context)
-                                      .add(KakaoLoginSubmitted()),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Image.asset(
-                                  "assets/images/kakao_login_wide.png"),
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthRequestState) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 35.0, vertical: 100.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          FlatButton(
+                            onPressed: () => BlocProvider.of<AuthBloc>(context)
+                                .add(KakaoLoginSubmitted()),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
-                            FlatButton(
-                              onPressed: () => {
-                                // TODO: NAVER OAUTH SHOULD BE IMPLEMENTED
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Image.asset(
-                                  "assets/images/naver_login_wide.png"),
+                            child: Image.asset(
+                                "assets/images/kakao_login_wide.png"),
+                          ),
+                          FlatButton(
+                            onPressed: () => {
+                              // TODO: NAVER OAUTH SHOULD BE IMPLEMENTED
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
-                            // Container(
-                            //   height: 40.0,
-                            //   margin: EdgeInsets.symmetric(horizontal: 35),
-                            //   child: RaisedButton(
-                            //     onPressed: () => showBottom(context),
-                            //     color: Theme.of(context).primaryColor,
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(5.0),
-                            //     ),
-                            //     child: Container(
-                            //       alignment: Alignment.center,
-                            //       child: Text(
-                            //         "이메일 로그인",
-                            //         textAlign: TextAlign.center,
-                            //         style: TextStyle(color: Colors.white),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                            // SizedBox(height: 20),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                            child: Image.asset(
+                                "assets/images/naver_login_wide.png"),
+                          ),
+                          // Container(
+                          //   height: 40.0,
+                          //   margin: EdgeInsets.symmetric(horizontal: 35),
+                          //   child: RaisedButton(
+                          //     onPressed: () => showBottom(context),
+                          //     color: Theme.of(context).primaryColor,
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(5.0),
+                          //     ),
+                          //     child: Container(
+                          //       alignment: Alignment.center,
+                          //       child: Text(
+                          //         "이메일 로그인",
+                          //         textAlign: TextAlign.center,
+                          //         style: TextStyle(color: Colors.white),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // SizedBox(height: 20),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

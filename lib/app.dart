@@ -9,7 +9,7 @@ import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_state.dart'
 import 'package:jmorder_app/bloc/clients/clients_bloc.dart';
 import 'package:jmorder_app/bloc/clients/clients_state.dart';
 import 'package:jmorder_app/bloc/orders/orders_bloc.dart';
-import 'package:jmorder_app/utils/router.dart';
+import 'package:jmorder_app/utils/router.dart' as UtilRouter;
 import 'package:jmorder_app/widgets/pages/auth_page.dart';
 
 import 'bloc/auth/auth_bloc.dart';
@@ -47,9 +47,11 @@ class AppState extends State<App> {
               debugShowCheckedModeBanner: false,
               initialRoute: AuthPage.routeName,
               theme: new ThemeData(
-                primarySwatch: Colors.pink,
-                primaryColor: const Color(0xFFFF0844),
-                accentColor: const Color(0xFFFF0844),
+                // primarySwatch: Colors.pink,
+                backgroundColor: const Color(0xFFF89B6C),
+                scaffoldBackgroundColor: Colors.white,
+                primaryColor: const Color(0xFFF37221),
+                accentColor: const Color(0xFFF37221),
                 canvasColor: const Color(0xFFfafafa),
               ),
               localizationsDelegates: [
@@ -64,7 +66,7 @@ class AppState extends State<App> {
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],
-              onGenerateRoute: Router.generateRoute,
+              onGenerateRoute: UtilRouter.Router.generateRoute,
             ),
           );
         }
