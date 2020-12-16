@@ -81,6 +81,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           lastName: event.lastName,
         );
         yield SignUpSuccessState();
+      } else if (event is SubmitRegister) {
       } else {
         throw new Exception('${event.runtimeType} is NOT implemented');
       }
