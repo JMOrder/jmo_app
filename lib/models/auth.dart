@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jmorder_app/models/connected_user.dart';
+import 'package:jmorder_app/models/auth/connected_user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth.g.dart';

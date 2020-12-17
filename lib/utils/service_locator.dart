@@ -15,7 +15,7 @@ class ServiceLocator {
         .registerSingletonAsync<AuthService>(() async => AuthService()..init());
     // GetIt.I.registerLazySingleton<FirebaseDynamicService>(
     //     () => FirebaseDynamicService());
-    GetIt.I.registerSingleton<VerificationService>(VerificationService());
+    // GetIt.I.registerSingleton<VerificationService>(VerificationService());
     GetIt.I.registerSingleton<ClientsService>(ClientsService());
     GetIt.I.registerSingleton<OrdersService>(OrdersService());
   }

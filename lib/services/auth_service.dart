@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/auth.dart';
 import 'package:jmorder_app/models/profile.dart';
+import 'package:jmorder_app/models/verification.dart';
 import 'package:jmorder_app/services/exceptions/auth_service_exception.dart';
 import 'package:kakao_flutter_sdk/auth.dart';
 
@@ -131,5 +132,47 @@ class AuthService {
     } catch (e) {
       throw ProfileFetchFailedException();
     }
+  }
+
+  Future<Verification> requestVerification(String phone) async {
+    try {
+      var response = await apiService
+          .getClient()
+          .post('/auth/registration/verify', data: {"phone": phone});
+      return Verification.fromJson(response.data);
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 404) throw PhoneNumberNotFoundException();
+      throw UnexpectedIntegrationException();
+    }
+  }
+
+  Future<Auth> performVerification(
+      String id, String otp, String authDetail) async {
+    var response = await apiService.getClient().patch(
+        '/auth/registration/verify',
+        data: {"id": id, "otp": otp, "authDetail": authDetail});
+    if (response.statusCode == HttpStatus.noContent) {
+      throw ConnectedUserNotFoundException();
+    }
+    Auth auth = Auth.fromJson(response.data);
+    apiService.setAuthorizationHeader(auth);
+    return auth;
+  }
+}
+
+class UnexpectedIntegrationException extends DioError {}
+
+class PhoneNumberNotFoundException extends DioError {}
+
+class ConnectedUserNotFoundException implements Exception {
+  String _message;
+  ConnectedUserNotFoundException(
+      [String message = 'Connected user does NOT exist']) {
+    this._message = message;
+  }
+
+  @override
+  String toString() {
+    return _message;
   }
 }

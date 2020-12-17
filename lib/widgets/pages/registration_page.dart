@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
   final Key key;
-  final String authDetail;
   static const String routeName = '/registration';
-  RegistrationPage({this.key, this.authDetail}) : super(key: key);
+  RegistrationPage({this.key}) : super(key: key);
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();

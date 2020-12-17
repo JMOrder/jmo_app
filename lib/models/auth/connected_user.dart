@@ -1,7 +1,7 @@
-import 'package:jmorder_app/models/authority.dart';
+import 'package:jmorder_app/models/auth/connected_user/authority.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part "connected_user.g.dart";
+part 'connected_user.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ConnectedUser {

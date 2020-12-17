@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:jmorder_app/widgets/components/auth/sign_up_form.dart';
 
 class SignUpPage extends StatelessWidget {
   static const String routeName = '/signup';
@@ -35,7 +34,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
-                  child: SignUpForm(),
+                  child: Container(),
                 ),
               ),
             ),

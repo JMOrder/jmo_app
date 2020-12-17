@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>895364619475-09hklfjqrv8d26tegh2mrehl055clcba.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.895364619475-09hklfjqrv8d26tegh2mrehl055clcba</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA62wwAMbmTbpobmNqreg_AE4ASqbNN-f8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>895364619475</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.rostradamus.jmorderApp</string>
+	<key>PROJECT_ID</key>
+	<string>jmorder</string>
+	<key>STORAGE_BUCKET</key>
+	<string>jmorder.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:895364619475:ios:10f63583fd579a2c0d4826</string>
+	<key>DATABASE_URL</key>
+	<string>https://jmorder.firebaseio.com</string>
+</dict>
+</plist>
