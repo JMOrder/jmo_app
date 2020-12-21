@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/item.dart';
 import 'package:jmorder_app/services/jmo_api_service.dart';
+import 'package:jmorder_app/utils/service_locator.dart';
 
 class OrderSearchItem extends SearchDelegate {
   final List<Item> _items;
@@ -12,7 +12,7 @@ class OrderSearchItem extends SearchDelegate {
 
   Future<List<Item>> searchItems(String query) async {
     var response =
-        await GetIt.I.get<JmoApiService>().getClient().get("/clients/1/items");
+        await getIt<JmoApiService>().getClient().get("/clients/1/items");
     return List<Map>.from(response.data)
         .map((Map model) => Item.fromJson(model))
         .toList();
@@ -22,7 +22,7 @@ class OrderSearchItem extends SearchDelegate {
     // if (debounceActive) return null;
     // debounceActive = true;
     // await Future.delayed(Duration(milliseconds: 2000));
-    // var response = await GetIt.I.get<ApiService>().getClient().get(
+    // var response = await getIt<ApiService>().getClient().get(
     //   "/clients/1/items/search",
     //   queryParameters: {"q": query},
     // );
@@ -32,7 +32,7 @@ class OrderSearchItem extends SearchDelegate {
     // debounceActive = false;
     // return items;
     // hit your api here
-    // var response = await GetIt.I.get<ApiService>().getClient().get(
+    // var response = await getIt<ApiService>().getClient().get(
     //   "/clients/1/items/search",
     //   queryParameters: {"q": query},
     // );

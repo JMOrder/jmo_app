@@ -15,7 +15,6 @@
 //   static const int viewIndex = 2;
 //   @override
 //   Widget build(BuildContext context) {
-//     BlocProvider.of<OrdersBloc>(context).add(OrdersViewLoaded());
 //     return Container(
 //       child: Stack(
 //         children: <Widget>[

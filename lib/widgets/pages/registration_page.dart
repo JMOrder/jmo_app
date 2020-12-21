@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jmorder_app/utils/injected.dart';
 
 class RegistrationPage extends StatefulWidget {
   final Key key;
@@ -11,7 +12,6 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -20,7 +20,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void dispose() {
     _emailController.dispose();
-    _phoneController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _passwordController.dispose();
@@ -32,11 +31,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF0844),
+        backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
-        title: Text(
-            // TODO: Change to "'플랫폼'과 연동"
-            "신규가입"),
+        title: Text("신규가입"),
       ),
       body: SingleChildScrollView(
         child: Padding(

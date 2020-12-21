@@ -1,8 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:jmorder_app/services/auth_service.dart';
+import 'package:jmorder_app/states/verification_service.dart';
 import 'package:jmorder_app/utils/injected.dart';
 import 'package:jmorder_app/widgets/components/auth/minute_second_timer.dart';
+import 'package:jmorder_app/widgets/pages/auth_page.dart';
+import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/pages/registration_page.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -76,7 +77,7 @@ class _VerificationPageState extends State<VerificationPage> {
                               hintText: "휴대폰 번호",
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.send),
-                                onPressed: () async => verificationState
+                                onPressed: () async => verificationService
                                     .setState((s) => s.requestVerification(
                                         _phoneMaskFormatter.getUnmaskedText())),
                               ),
@@ -86,11 +87,14 @@ class _VerificationPageState extends State<VerificationPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        verificationState.whenRebuilderOr(
+                        verificationService.whenRebuilderOr(
+                          onWaiting: () => Center(
+                            child: CircularProgressIndicator(),
+                          ),
                           builder: () {
-                            if (verificationState.state.model == null) {
-                              return SizedBox.shrink();
-                            } else {
+                            final verificationModel =
+                                verificationService.state.model;
+                            if (verificationModel != null) {
                               return Column(
                                 children: [
                                   Container(
@@ -110,23 +114,24 @@ class _VerificationPageState extends State<VerificationPage> {
                                         suffixIcon: IconButton(
                                           icon: Icon(Icons.send),
                                           onPressed: () async {
-                                            await verificationState.setState(
+                                            await verificationService.setState(
                                               (s) => s.performVerification(
                                                   _otpController.text),
                                               onError: (context, error) {
-                                                print(error.runtimeType);
-                                                if (error is DioError) {
-                                                  print("DIO!!");
-                                                }
                                                 if (error
                                                     is ConnectedUserNotFoundException) {
-                                                  print("PLEASE!!");
                                                   RM.navigate.backAndToNamed(
                                                       RegistrationPage
                                                           .routeName);
+                                                } else {
+                                                  RM.navigate
+                                                      .toNamedAndRemoveUntil(
+                                                          AuthPage.routeName);
                                                 }
                                               },
                                             );
+                                            RM.navigate.toNamedAndRemoveUntil(
+                                                MainPage.routeName);
                                           },
                                         ),
                                       ),
@@ -142,13 +147,72 @@ class _VerificationPageState extends State<VerificationPage> {
                                         ),
                                       ),
                                       child: MinuteSecondTimer(
-                                          expiresAt: verificationState
-                                              .state.model.expiresAt)),
+                                          expiresAt:
+                                              verificationModel.expiresAt)),
                                 ],
                               );
                             }
+                            return SizedBox.shrink();
                           },
                         ),
+                        // verificationState.whenRebuilderOr(
+                        //   builder: () {
+                        //     if (verificationState.state.model == null) {
+                        //       return SizedBox.shrink();
+                        //     } else {
+                        //       return Column(
+                        //         children: [
+                        //           Container(
+                        //             decoration: BoxDecoration(
+                        //               border: Border(
+                        //                 bottom: BorderSide(color: Colors.grey),
+                        //               ),
+                        //             ),
+                        //             child: TextFormField(
+                        //               key: ValueKey("text"),
+                        //               controller: _otpController,
+                        //               textInputAction: TextInputAction.next,
+                        //               keyboardType: TextInputType.number,
+                        //               decoration: InputDecoration(
+                        //                 border: InputBorder.none,
+                        //                 hintText: "인증번호",
+                        //                 suffixIcon: IconButton(
+                        //                   icon: Icon(Icons.send),
+                        //                   onPressed: () async {
+                        //                     await verificationState.setState(
+                        //                       (s) => s.performVerification(
+                        //                           _otpController.text),
+                        //                       onError: (context, error) {
+                        //                         if (error
+                        //                             is ConnectedUserNotFoundException) {
+                        //                           RM.navigate.backAndToNamed(
+                        //                               RegistrationPage
+                        //                                   .routeName);
+                        //                         }
+                        //                       },
+                        //                     );
+                        //                   },
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           Container(
+                        //               margin:
+                        //                   EdgeInsets.symmetric(vertical: 10),
+                        //               decoration: BoxDecoration(
+                        //                 border: Border(
+                        //                   bottom:
+                        //                       BorderSide(color: Colors.grey),
+                        //                 ),
+                        //               ),
+                        //               child: MinuteSecondTimer(
+                        //                   expiresAt: verificationState
+                        //                       .state.model.expiresAt)),
+                        //         ],
+                        //       );
+                        //     }
+                        //   },
+                        // ),
                         // BlocBuilder<AuthBloc, AuthState>(
                         //   builder: (context, state) {
                         //     if (state is WaitingForOTP) {
@@ -248,5 +312,3 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 }
-
-class _RegistrationState {}

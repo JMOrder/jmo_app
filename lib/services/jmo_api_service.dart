@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:jmorder_app/models/auth.dart';
 import 'package:jmorder_app/services/jmo_api_service/jmo_api_serivce_interceptor.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:jmorder_app/services/exceptions/unsupported_os_exception.dart';
@@ -30,8 +29,8 @@ class JmoApiService {
     };
   }
 
-  void setAuthorizationHeader(Auth auth) {
-    _client.options.headers["authorization"] = auth.authorization;
+  void setAuthorizationHeader(String authorization) {
+    _client.options.headers["authorization"] = authorization;
   }
 
   void clearAuthorizationHeader() {

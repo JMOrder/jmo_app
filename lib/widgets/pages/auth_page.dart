@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jmorder_app/services/exceptions/auth_service_exception.dart';
+import 'package:jmorder_app/states/auth_service.dart';
 import 'package:jmorder_app/utils/injected.dart';
-import 'package:jmorder_app/widgets/pages/verification_page.dart';
+import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class AuthPage extends StatelessWidget {
@@ -9,18 +9,24 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    authState.setState((s) async {
-      try {
-        await s.refreshToken();
-      } on RefreshTokenFailedException {
-        print("Need login");
-      }
-    });
+    authService.setState(
+      (s) => s.refreshToken(),
+      onError: (context, error) {
+        if (error is RefreshTokenFailedException) {
+          print("Need login");
+        }
+      },
+      onData: (context, state) {
+        if (state.auth.token != null) {
+          RM.navigate.toNamedAndRemoveUntil(MainPage.routeName);
+        }
+      },
+    );
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return authState.whenRebuilderOr(
+          return authService.whenRebuilderOr(
             onWaiting: () => Center(
               child: CircularProgressIndicator(),
             ),
@@ -39,10 +45,8 @@ class AuthPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       FlatButton(
-                        onPressed: () async {
-                          await authState.setState((s) => s.loginWithKakao());
-                          RM.navigate.toNamed(VerificationPage.routeName);
-                        },
+                        onPressed: () =>
+                            authService.setState((s) => s.loginWithKakao()),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),

@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/models/order.dart';
 import 'package:jmorder_app/services/jmo_api_service.dart';
-import 'package:jmorder_app/services/auth_service.dart';
+import 'package:jmorder_app/utils/injected.dart';
+import 'package:jmorder_app/utils/service_locator.dart';
 
 import 'exceptions/common_http_exception.dart';
 
 class OrdersService {
-  JmoApiService get _apiService => GetIt.I.get<JmoApiService>();
+  JmoApiService get _apiService => getIt<JmoApiService>();
   List<Order> orders = [];
 
   Future<List<Order>> fetchOrders() async {
@@ -35,7 +35,7 @@ class OrdersService {
   Future<Order> createOrder(Order order) async {
     try {
       var response = await _apiService.getClient().post('/orders', data: {
-        "user": GetIt.I.get<AuthService>().profile.id,
+        "user": profileService.state.profile.id,
         "client": order.client.id,
       });
       this.orders.insert(0, Order.fromJson(response.data));

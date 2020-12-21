@@ -1,17 +1,15 @@
-// import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_bloc.dart';
-// import 'package:jmorder_app/bloc/bottom_navigation/bottom_navigation_event.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:jmorder_app/utils/injected.dart';
 
-// class MainPageBottomNavigationBar extends StatelessWidget {
+// class CustomBottomNavigationBar extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
 //     return BottomNavigationBar(
 //       showSelectedLabels: true,
 //       showUnselectedLabels: false,
-//       onTap: (index) => BlocProvider.of<BottomNavigationBloc>(context)
-//           .add(PageTapped(index: index)),
-//       currentIndex: BlocProvider.of<BottomNavigationBloc>(context).currentIndex,
+//       onTap: (toIndex) => bottomNavigationState.setState((s) => s.to(toIndex))
+//       currentIndex: bottomNavigationState.state.currentIndex,
 //       type: BottomNavigationBarType.fixed,
 //       items: const <BottomNavigationBarItem>[
 //         BottomNavigationBarItem(

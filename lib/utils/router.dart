@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:jmorder_app/models/auth.dart';
 import 'package:jmorder_app/widgets/pages/auth_page.dart';
+import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/pages/registration_page.dart';
 import 'package:jmorder_app/widgets/pages/verification_page.dart';
+
+import 'injected.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case MainPage.routeName:
-      //   var targetIndex = (settings.arguments as int) ?? 0;
-      //   return MaterialPageRoute(
-      //       builder: (_) => MainPage(
-      //             targetIndex: targetIndex,
-      //           ));
+      case MainPage.routeName:
+        var targetIndex = (settings.arguments as int) ?? 0;
+        profileService.setState((s) => s.fetchProfile());
+        clientService.setState((s) => s.fetchClients());
+        return MaterialPageRoute(
+            builder: (_) => MainPage(
+                  targetIndex: targetIndex,
+                ));
       case AuthPage.routeName:
         return MaterialPageRoute(builder: (_) => AuthPage());
-      // case SignUpPage.routeName:
-      //   return MaterialPageRoute(builder: (_) => SignUpPage());
       case RegistrationPage.routeName:
         return MaterialPageRoute(builder: (_) => RegistrationPage());
       case VerificationPage.routeName:

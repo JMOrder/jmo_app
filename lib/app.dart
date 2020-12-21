@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get_it/get_it.dart';
 import 'package:jmorder_app/utils/router.dart' as UtilRouter;
+import 'package:jmorder_app/utils/service_locator.dart';
 import 'package:jmorder_app/widgets/pages/auth_page.dart';
 // import 'package:jmorder_app/widgets/pages/auth_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -11,7 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GetIt.I.allReady(),
+      future: getIt.allReady(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           return MaterialApp(
