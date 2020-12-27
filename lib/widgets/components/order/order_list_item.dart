@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jmorder_app/models/order_item.dart';
+import 'package:jmorder_app/utils/injected.dart';
 
 class OrderListItem extends StatefulWidget {
   final OrderItem orderItem;
-  final void Function(OrderItem) onDelete;
-  OrderListItem(this.orderItem, {Key key, @required this.onDelete})
-      : super(key: key);
+  OrderListItem(this.orderItem, {Key key}) : super(key: key);
 
   @override
   _OrderListItemState createState() => _OrderListItemState(orderItem);
@@ -36,9 +35,9 @@ class _OrderListItemState extends State<OrderListItem> {
                   textAlign: TextAlign.end,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   initialValue: _orderItem.unitAmount?.toString(),
-                  onChanged: (value) {
+                  onChanged: (value) => setState(() {
                     _orderItem.unitAmount = double.parse(value);
-                  },
+                  }),
                   decoration: InputDecoration(
                     suffixText: _orderItem.item.unitName,
                   ),
@@ -76,7 +75,8 @@ class _OrderListItemState extends State<OrderListItem> {
       ),
       trailing: IconButton(
         icon: Icon(Icons.delete),
-        onPressed: () => widget.onDelete(_orderItem),
+        onPressed: () =>
+            selectedOrderState.setState((s) => s.removeOrderItem(_orderItem)),
       ),
     );
   }

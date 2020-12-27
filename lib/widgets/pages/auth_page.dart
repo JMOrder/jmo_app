@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jmorder_app/states/auth_service.dart';
+import 'package:jmorder_app/services/auth_service.dart';
 import 'package:jmorder_app/utils/injected.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';

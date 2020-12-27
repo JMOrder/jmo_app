@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jmorder_app/states/verification_service.dart';
+import 'package:jmorder_app/services/verification_service.dart';
 import 'package:jmorder_app/utils/injected.dart';
 import 'package:jmorder_app/widgets/components/auth/minute_second_timer.dart';
 import 'package:jmorder_app/widgets/pages/auth_page.dart';

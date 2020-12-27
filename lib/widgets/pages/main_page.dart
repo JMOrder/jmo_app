@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jmorder_app/utils/injected.dart';
-import 'package:jmorder_app/widgets/components/dialog/client/client_basic_info_form_dialog.dart';
 import 'package:jmorder_app/widgets/pages/main/chat_view.dart';
 import 'package:jmorder_app/widgets/pages/main/client_view.dart';
+import 'package:jmorder_app/widgets/pages/main/order_view.dart';
 import 'package:jmorder_app/widgets/pages/main/settings_view.dart';
 import 'package:jmorder_app/widgets/pages/main/staffs_view.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class MainPage extends StatelessWidget {
-  final int targetIndex;
-  const MainPage({Key key, this.targetIndex}) : super(key: key);
+  const MainPage({Key key}) : super(key: key);
 
   static const String routeName = '/main';
   @override
@@ -25,23 +24,24 @@ class MainPage extends StatelessWidget {
           ),
           body: SafeArea(
             top: false,
-            child: [profileService].whenRebuilderOr(
+            child:
+                [profileService, clientService, orderService].whenRebuilderOr(
               onWaiting: () => Center(
                 child: CircularProgressIndicator(),
               ),
               builder: () {
                 final currentIndex = bottomNavigationState.state;
                 switch (currentIndex) {
-                  case StaffsView.viewIndex: // 0
+                  case StaffsView.viewIndex:
                     return StaffsView();
-                  case ChatView.viewIndex: // 1
+                  case ChatView.viewIndex:
                     return ChatView();
+                  case OrderView.viewIndex:
+                    return OrderView();
+                  case ClientView.viewIndex:
+                    return ClientView();
                   case SettingsView.viewIndex:
                     return SettingsView();
-                  case ClientView.viewIndex: // 3
-                    return ClientView();
-
-                  case 2: // TODO
                   default:
                     {
                       return Container(
@@ -61,16 +61,17 @@ class MainPage extends StatelessWidget {
   String buildTitle() {
     final currentIndex = bottomNavigationState.state;
     switch (currentIndex) {
-      case StaffsView.viewIndex: // 0
+      case StaffsView.viewIndex:
         return StaffsView.title;
-      case ChatView.viewIndex: // 1
+      case ChatView.viewIndex:
         return ChatView.title;
+      case OrderView.viewIndex:
+        return OrderView.title;
+      case ClientView.viewIndex:
+        return ClientView.title;
       case SettingsView.viewIndex:
         return SettingsView.title;
-      case ClientView.viewIndex: // 3
-        return ClientView.title;
 
-      case 2: // TODO
       default:
         return "주먹맛볼래";
     }
@@ -79,15 +80,17 @@ class MainPage extends StatelessWidget {
   List<Widget> buildActions(BuildContext context) {
     final currentIndex = bottomNavigationState.state;
     switch (currentIndex) {
-      case StaffsView.viewIndex: // 0
+      case StaffsView.viewIndex:
         return [];
-      case ChatView.viewIndex: // 1
+      case ChatView.viewIndex:
         return [];
+      case OrderView.viewIndex:
+        return OrderView.appBarActions(context);
+      case ClientView.viewIndex:
+        return ClientView.appBarActions(context);
       case SettingsView.viewIndex:
         return [];
-      case ClientView.viewIndex: // 3
-        return ClientView.appBarActions(context);
-      case 2: // TODO
+
       default:
         return [];
     }

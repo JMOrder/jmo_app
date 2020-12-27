@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:jmorder_app/models/verification.dart';
 import 'package:jmorder_app/services/jmo_api_service.dart';
 import 'package:jmorder_app/utils/injected.dart';
-import 'package:jmorder_app/utils/service_locator.dart';
+import 'package:jmorder_app/utils/dependency_injector.dart';
 
 class VerificationService {
   Verification model;

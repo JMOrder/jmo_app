@@ -13,6 +13,7 @@ Item _$ItemFromJson(Map<String, dynamic> json) {
     unitName: json['unitName'] as String,
     quantityName: json['quantityName'] as String,
     comment: json['comment'] as String,
+    favorite: json['favorite'] as bool,
   );
 }
 
@@ -30,5 +31,6 @@ Map<String, dynamic> _$ItemToJson(Item instance) {
   writeNotNull('unitName', instance.unitName);
   writeNotNull('quantityName', instance.quantityName);
   writeNotNull('comment', instance.comment);
+  writeNotNull('favorite', instance.favorite);
   return val;
 }

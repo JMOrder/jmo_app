@@ -7,7 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jmorder_app/models/auth.dart';
 import 'package:jmorder_app/services/jmo_api_service.dart';
 import 'package:jmorder_app/utils/injected.dart';
-import 'package:jmorder_app/utils/service_locator.dart';
+import 'package:jmorder_app/utils/dependency_injector.dart';
 import 'package:jmorder_app/widgets/pages/main_page.dart';
 import 'package:jmorder_app/widgets/pages/verification_page.dart';
 import 'package:kakao_flutter_sdk/all.dart';

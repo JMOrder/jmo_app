@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:jmorder_app/utils/dependency_injector.dart';
 import 'package:jmorder_app/utils/router.dart' as UtilRouter;
-import 'package:jmorder_app/utils/service_locator.dart';
 import 'package:jmorder_app/widgets/pages/auth_page.dart';
 // import 'package:jmorder_app/widgets/pages/auth_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';

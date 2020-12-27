@@ -1,14 +1,16 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'item.g.dart';
 
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
-class Item {
-  int id;
-  String name;
-  String unitName;
-  String quantityName;
-  String comment;
+class Item extends Equatable {
+  final int id;
+  final String name;
+  final String unitName;
+  final String quantityName;
+  final String comment;
+  final bool favorite;
 
   Item({
     this.id,
@@ -16,13 +18,12 @@ class Item {
     this.unitName,
     this.quantityName,
     this.comment,
+    this.favorite,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
   Map<String, dynamic> toJson() => _$ItemToJson(this);
 
-  bool operator ==(o) => o is Item && this.id == o.id;
-
   @override
-  int get hashCode => super.hashCode;
+  List<Object> get props => [id];
 }
